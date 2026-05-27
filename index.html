@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор урона</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Comic Sans MS", cursive;
+}
+
+body{
+    background:#1e1e1e;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:15px;
+}
+
+.container{
+    width:100%;
+    max-width:380px;
+    background:#2e2e2e;
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 0 25px rgba(0,0,0,0.5);
+}
+
+h1{
+    font-size:24px;
+    margin-bottom:20px;
+    color:#dcdcdc;
+}
+
+.section{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+select{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:14px;
+    background:#555;
+    color:white;
+    font-size:18px;
+    outline:none;
+}
+
+.result{
+    margin-top:20px;
+    background:#3c3c3c;
+    padding:18px;
+    border-radius:15px;
+    font-size:20px;
+    font-weight:bold;
+    min-height:80px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.info{
+    margin-top:12px;
+    font-size:17px;
+    color:#d0d0d0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Калькулятор урона</h1>
+
+    <div class="section">
+        <label>Оружие</label>
+        <select id="weapon">
+            <option selected disabled>Выбрать</option>
+        </select>
+    </div>
+
+    <div class="section">
+        <label>Броня</label>
+        <select id="armor">
+            <option selected disabled>Выбрать</option>
+        </select>
+    </div>
+
+    <div class="result" id="result">
+        Выберите оружие и броню
+    </div>
+
+    <div class="info" id="special"></div>
+</div>
+
+<script>
+const data = {
+"Кинжал": {values:[3,3,1,0,0,0,0], special:"Смертелен в захвате, опасен в щели брони"},
+"Копьё": {values:[7,7,5,4,4,3,1], special:"Держит дистанцию, открывает зоны"},
+"Топор": {values:[8,8,7,4,5,3,1], special:"Ломает защиту, выбивает оружие"},
+"Булава": {values:[8,8,7,6,6,5,4], special:"Лучший урон по броне"},
+"Короткий меч": {values:[8,8,6,4,3,1,0], special:"Быстрые серии ударов"},
+"Длинный меч": {values:[8,8,7,5,4,3,1], special:"Универсален"},
+"Полуторный меч": {values:[8,8,8,6,5,4,3], special:"Мощные двуручные удары"},
+"Двуручный меч": {values:[9,9,8,7,6,5,4], special:"Огромная сила удара"},
+"Короткий лук": {values:[7,5,3,1,0,0,0], special:"Быстрый выстрел"},
+"Длинный лук": {values:[8,7,5,4,3,1,0], special:"Дальнобойность"},
+"Лёгкий арбалет": {values:[8,8,7,5,5,4,3], special:"Лучший дальний урон"}
+};
+
+const armors = [
+"Стёганка лёгкая",
+"Кожаная лёгкая",
+"Усиленная кожаная лёгкая+",
+"Кольчуга средняя",
+"Чешуйчатый доспех средняя+",
+"Полулатный тяжёлая",
+"Латный сверхтяжёлая"
+];
+
+const damageDesc = {
+0:"Удар полностью остановлен бронёй",
+1:"Слышен звон металла, цель почти не пострадала",
+2:"Цель получила слабый ушиб",
+3:"Остался болезненный синяк",
+4:"Цель получила лёгкое ранение",
+5:"Нанесена полноценная рана",
+6:"Удар оставил глубокое ранение",
+7:"Цель получила тяжёлое повреждение",
+8:"Критическое ранение, противник на грани",
+9:"Противник почти выведен из строя",
+10:"Поражённая зона уничтожена"
+};
+
+const weaponSelect = document.getElementById("weapon");
+const armorSelect = document.getElementById("armor");
+
+Object.keys(data).forEach(w=>{
+    weaponSelect.innerHTML += `<option>${w}</option>`;
+});
+
+armors.forEach(a=>{
+    armorSelect.innerHTML += `<option>${a}</option>`;
+});
+
+function calculate(){
+    if(weaponSelect.selectedIndex===0 || armorSelect.selectedIndex===0) return;
+
+    const weapon = weaponSelect.value;
+    const dmg = data[weapon].values[armorSelect.selectedIndex-1];
+
+    document.getElementById("result").innerHTML = damageDesc[dmg];
+    document.getElementById("special").innerHTML = data[weapon].special;
+}
+
+weaponSelect.onchange = calculate;
+armorSelect.onchange = calculate;
+</script>
+
+</body>
+</html>
